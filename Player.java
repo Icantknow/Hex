@@ -17,50 +17,58 @@ import java.util.*;
 
 public class Player {
 	int size;
-	UnionFind p;
-	boolean[] board;
-	
+	UnionFind board;
+	boolean[] played;
+	boolean f;
+
 	/**
 	 * constructor to create a player and set up their underlying board structure
 	 * 
 	 * @param n  determines the size of the board (how long a row is)
 	 * @param first  determines whether this player plays first (so is trying to connect sides labeled with numbers) or second (so tries to connect sides labeled with letters)
 	 */
-	
+
 	Player(int n, boolean first) {
 		size = n;
-		p = new UnionFind(n*n+2);
-		board = new boolean[n];
-		
+		board = new UnionFind(n*n+2);
+		played = new boolean[n*n];
+		f = first;
+
 		/* the first n^2 elements represent the n^2 cells of the board
 		 * the last two represent the edges of the board, since we want to see when two edges are connected
 		 * we automatically connect each of the edges to their constituent cells
 		 */
 		for (int i = 0; i < n; ++i) {
 			if (first) {
-				p.connected(n*n, n*i);
-				p.connected(n*n+1, n*i + n-1);
+				board.join(n*n, n*i);
+				board.join(n*n+1, n*i + n-1);
 			}
 			else {
-				p.connected(n*n, i);
-				p.connected(n*n, n*(n-1) + i);
+				board.join(n*n, i);
+				board.join(n*n+1, n*(n-1) + i);
 			}
 		}
-		
+
 		/* booleans initialize at false anyway, but this just makes sure
 		 */
-		
-		for (int i = 0; i < n; ++i) {
-			board[i] = false;
+
+		for (int i = 0; i < n*n; ++i) {
+			played[i] = false;
 		}
 	}
+
+	/**
+	 * returns cells around p that aren't off the board
+	 * 
+	 * @param p  position we care about
+	 */
 	
-	int[] around(int p) {
+	ArrayList<Integer> around(int p) {
 		ArrayList<Integer> tmp = new ArrayList<Integer>();
 		int row, col;
 		col = p%size;
 		row = (int) (p-col)/size;
-		
+
 		if (!(col == 0)) {
 			tmp.add(p-1);
 		}
@@ -79,9 +87,51 @@ public class Player {
 		if ((!(row == size-1) && !(col == 0))) {
 			tmp.add(p+size-1);
 		}
+
+		return tmp;
 	}
 	
+	/**
+	 * places piece and joins to all pieces around it that are open
+	 * 
+	 * @param p  position of piece
+	 */
+
 	void put(int p) {
-		
+		played[p] = true;
+
+		for (Integer i: around(p)) {
+			if (played[i]) {
+				board.join(p, i);
+			}
+		}
 	}
+
+	boolean win() {
+		return board.connected(size*size, size*size+1);
+	}
+	/*	
+	public static void main(String[] args) {
+
+		Player p = new Player(2, true);
+
+		System.out.println(p.win());
+
+		p.put(0);
+		p.put(2);
+		p.put(3);
+
+		System.out.println(p.win());
+
+		Player p1 = new Player(9, true);
+
+
+		for (int i = 0; i < 9; ++i) {
+			p1.put(i);
+			System.out.println(p1.board.connected(0, i));
+		}
+		System.out.println(p1.board.connected(7, 8));
+		System.out.println(p1.win());
+	}
+	 */
 }
