@@ -1,7 +1,8 @@
-import java.io.*;
 import java.util.*;
 
-/* note the players play on cells labeled with (assuming the board is size 11) a-k and 1-11. The kth cell of the mth row (like a6 is the first cell of the 6th row) is element (k-1)+n*(m-1)
+/* note the players play on cells labeled with (assuming the board is size 11) a-k and 1-11. 
+ * The kth cell of the mth row (like a6 is the first cell of the 6th row) is element (k-1)+n*(m-1)
+ * 
  * the board looks like
  * a1 b1 c1 d1 e1
  * 	a2 b2 c2 d2 e2
@@ -14,7 +15,6 @@ import java.util.*;
  *    15 16 17 18 19
  *     20 21 22 23 24
  */
-
 public class Player {
 	int size;
 	UnionFind board;
@@ -27,7 +27,6 @@ public class Player {
 	 * @param n  determines the size of the board (how long a row is)
 	 * @param first  determines whether this player plays first (so is trying to connect sides labeled with numbers) or second (so tries to connect sides labeled with letters)
 	 */
-
 	Player(int n, boolean first) {
 		size = n;
 		board = new UnionFind(n*n+2);
@@ -51,7 +50,6 @@ public class Player {
 
 		/* booleans initialize at false anyway, but this just makes sure
 		 */
-
 		for (int i = 0; i < n*n; ++i) {
 			played[i] = false;
 		}
@@ -62,7 +60,6 @@ public class Player {
 	 * 
 	 * @param p  position we care about
 	 */
-	
 	ArrayList<Integer> around(int p) {
 		ArrayList<Integer> tmp = new ArrayList<Integer>();
 		int row, col;
@@ -90,13 +87,12 @@ public class Player {
 
 		return tmp;
 	}
-	
+
 	/**
 	 * places piece and joins to all pieces around it that are open
 	 * 
 	 * @param p  position of piece
 	 */
-
 	void put(int p) {
 		played[p] = true;
 
@@ -107,6 +103,10 @@ public class Player {
 		}
 	}
 
+	/**
+	 * determine if a player win
+	 * @return true one player won
+	 */
 	boolean win() {
 		return board.connected(size*size, size*size+1);
 	}
