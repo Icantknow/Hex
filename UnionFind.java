@@ -1,8 +1,9 @@
-import java.io.*;
-import java.util.*;
-
-// this is a standard union-find (uf) data structure. this keeps track of all the cells on the board and efficiently determines whether two edges have been connected
-
+/**
+ * Class Name: UnionFind
+ * 
+ * this is a standard union-find (uf) data structure. this keeps track of all the cells on the board
+ * and efficiently determines whether two edges have been connected
+ */
 public class UnionFind {
 	int n; // amount of points in my uf to keep track of
 	int[] parent; // uf uses a forest of trees, and "parent" keeps track of the head of each vertex
@@ -32,10 +33,11 @@ public class UnionFind {
 	 * @param p  the vertex we want to find the root of
 	 * @return the root
 	 */
-
 	int find(int p) {
 		while (!(p == parent[p])) {
-			parent[p] = parent[parent[p]]; // works to "flatten" out the trees, since each vertex will now be joined to its "grandparent" instead of its parent. Connected vertices will still be connected, so this will only increase efficiency
+			// works to "flatten" out the trees, since each vertex will now be joined to its "grandparent" instead of its parent.
+			// Connected vertices will still be connected, so this will only increase efficiency
+			parent[p] = parent[parent[p]]; 
 			p = parent[p];
 		}
 		return p;
@@ -48,7 +50,6 @@ public class UnionFind {
 	 * @param q  the second vertex to compare
 	 * @return whether the vertices have the same root, which implies they are connected
 	 */
-
 	boolean connected(int p, int q) {
 		return (find(p) == find(q));
 	}
@@ -59,7 +60,6 @@ public class UnionFind {
 	 * @param p  first vertex to connect
 	 * @param q  second vertex to connect
 	 */
-
 	void join(int p, int q) {
 		if (connected(p, q)) {
 			return;
@@ -68,8 +68,8 @@ public class UnionFind {
 		p = find(p);
 		q = find(q);
 
-		// if the size of the tree rooted at p is larger than that size of the tree rooted at q, q should be attached at p, to keep the height of trees to a minimum
-
+		// if the size of the tree rooted at p is larger than that size of the tree rooted at q, 
+		// q should be attached at p, to keep the height of trees to a minimum
 		if (weight[p] > weight[q]) {
 			parent[q] = p;
 			weight[p] += weight[q]; // increase the weight of p
@@ -87,7 +87,6 @@ public class UnionFind {
 	 * @param p  the vertex we want to find the size of
 	 * @return the size
 	 */
-
 	int sizeComp(int p) {
 		return weight[find(p)];
 	}
@@ -98,7 +97,6 @@ public class UnionFind {
 	 * @param p  the vertex we want to find the size of
 	 * @return the size
 	 */
-
 	int size(int p) {
 		return weight[p];
 	}
@@ -108,7 +106,6 @@ public class UnionFind {
 	 * 
 	 * @return the number of components
 	 */
-
 	int numComp() {
 		return numcomp;
 	}
