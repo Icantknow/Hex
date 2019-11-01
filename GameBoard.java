@@ -31,6 +31,7 @@ public class GameBoard extends JPanel {
 
 	private Board board;
 	private boolean cantMove = false;
+	private boolean firstMove = true;
 	private static final String[] PLAYER_NAME  = {"RED", "BLUE"};
 	private JTextField statusField;
 
@@ -79,11 +80,19 @@ public class GameBoard extends JPanel {
 				}
 
 				// checks to see if a piece has already been placed there
+				// and switches player if it's been placed, but only on the
+				// firstmove
 				if (board.isOccupied(row, col)) {
+					if (firstMove) {
+						Player temp = board.p1;
+						board.p1 = board.p2;
+						board.p2 = temp;
+					}
 					return;
 				}
 
 				board.addStone(row, col);
+				firstMove = false;
 				lastMove = new Point(col, row);
 
 				// converts row and column to position in board
